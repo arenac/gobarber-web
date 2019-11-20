@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { parseISO, formatDistance } from 'date-fns';
 import en from 'date-fns/locale/en-US';
 
@@ -16,6 +16,11 @@ import {
 export default function Notifications() {
   const [visible, setVisible] = useState(false);
   const [notifications, setNotifications] = useState([]);
+
+  const hasUnread = useMemo(
+    () => !!notifications.find(notification => notification.read === false),
+    [notifications]
+  );
 
   function handleToggleVisible() {
     setVisible(!visible);
@@ -54,7 +59,7 @@ export default function Notifications() {
 
   return (
     <Container>
-      <Badge hasUnread onClick={handleToggleVisible}>
+      <Badge hasUnread={hasUnread} onClick={handleToggleVisible}>
         <MdNotifications color="#7519c1" size={20} />
       </Badge>
 
