@@ -1,4 +1,5 @@
 import { takeLatest, call, put, all } from 'redux-saga/effects';
+import { toast } from 'react-toastify';
 
 import api from '~/services/api';
 import history from '~/services/history';
@@ -17,7 +18,8 @@ export function* signIn({ payload }) {
     const { token, user } = response.data;
 
     if (!user.provider) {
-      console.tron.error('You are not allowed to login');
+      toast.error('You are not allowed to login');
+      yield put(signFailure());
       return;
     }
 
@@ -25,6 +27,7 @@ export function* signIn({ payload }) {
 
     history.push('/dashboard');
   } catch (err) {
+    toast.error('Authentication failure');
     yield put(signFailure());
   }
 }
