@@ -42,6 +42,16 @@ export default function Notifications() {
     loadNotifications();
   }, []);
 
+  async function hadleMarkAsRead(id) {
+    await api.put(`notifications/${id}`);
+
+    setNotifications(
+      notifications.map(notification =>
+        notification._id === id ? { ...notification, read: true } : notification
+      )
+    );
+  }
+
   return (
     <Container>
       <Badge hasUnread onClick={handleToggleVisible}>
@@ -54,7 +64,12 @@ export default function Notifications() {
             <Notification key={notification._id} unread={!notification.read}>
               <p>{notification.content}</p>
               <time>{notification.timeDistance}</time>
-              <button type="button">Set as read</button>
+              <button
+                type="button"
+                onClick={() => hadleMarkAsRead(notification._id)}
+              >
+                Set as read
+              </button>
             </Notification>
           ))}
         </Scroll>
